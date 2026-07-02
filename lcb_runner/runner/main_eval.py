@@ -105,12 +105,6 @@ def main():
 
     else:
         #########
-        # IDS_TO_KEEP = ['abc342_c', '3580', '2868', 'abc318_e', 'abc301_d', 'abc397_f', 'abc304_d', 'abc356_e', '3608', '1899_D', 'abc377_f', 'abc331_c', 'abc392_g', 'abc341_e', '2952', '3344', 'abc372_c', '3362', '3306', 'abc367_f', '3788', '3700', 'arc185_e', 'abc355_c', '3213', 'abc371_d', 'abc369_c', 'abc388_c', 'abc361_c', 'abc367_d', '3583', 'abc390_e', 'abc362_d', 'abc331_e', 'abc324_e', 'abc344_c', 'abc340_e', '2915', '3329', 'abc369_d', '3750', '3025', 'abc358_e', '3382', 'abc305_e', 'abc315_c', '3725', '3801', 'abc366_f', 'abc322_e', '3696', 'abc353_c', '3243', 'abc322_c', 'abc368_c', 'arc182_e', '3316', 'abc393_f', 'abc362_e', '3032', 'abc306_e', 'abc388_f', '3240', 'abc351_f', '2845', '3699', '3223', 'abc376_e', 'abc370_e', 'abc348_e', '2833', '3466', 'abc334_d', 'abc343_d', 'abc391_g', 'abc375_d', 'abc364_c', '3688', 'abc355_d', 'abc344_e', 'abc377_d', '1899_C', '3000', '2779', 'abc304_e', 'abc373_f', 'abc372_g', '2784', '3438', 'abc346_d', 'abc302_d', 'abc326_c', 'abc373_c', 'arc181_a', 'abc359_d', 'abc352_e', 'abc321_d', '3479', '3680', 'abc367_g', 'arc181_d', 'abc311_e', 'abc391_f', 'abc308_e', '2884', '3104', 'abc372_d', 'abc375_g', '3777', '3337', 'abc370_d', 'abc396_f', 'arc182_d', 'abc325_c', 'abc366_e', 'abc364_d', 'abc396_g', 'abc379_e', 'abc304_c', '3416', 'abc330_e', '3423', 'abc356_d', 'abc330_b', '2953', 'abc365_e', 'abc306_c', 'abc350_c', 'abc329_d', 'abc353_d', '3603', '3634', 'abc371_e', '3528', '3192', 'arc184_c', 'abc329_f', 'abc331_d', '3759', 'abc382_d', '3363', 'abc347_e', '3482', 'abc346_e', 'abc395_c', 'abc328_c', 'arc196_a', '3507', 'abc396_c']
-        # remaining_indices = [
-        #     idx
-        #     for idx in range(len(benchmark))
-        #     if benchmark[idx].question_id in ids_in_results
-        # ]
         remaining_indices = []
         for iir in ids_in_results:
             for idx in range(len(benchmark)):
@@ -118,7 +112,6 @@ def main():
                     remaining_indices.append(idx)
                     break
         benchmark = [benchmark[idx] for idx in remaining_indices]
-        # combined_results = [combined_results[idx] for idx in remaining_indices]
         #########
         metrics = get_metrics(args.scenario, args, benchmark, combined_results)
         graded = extract_instance_results(metrics[1])
