@@ -185,8 +185,11 @@ def get_metrics(
     ],
     combined_results,
 ):
-    eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
-    generations = [extracted for _, extracted in combined_results]
+    question_ids = [qid for _, _, _, qid in combined_results]
+    eval_samples = [instance.get_evaluation_sample() for instance in benchmark if instance.question_id in question_ids]
+    # eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
+    generations = [extracted for _, extracted, _, _ in combined_results]
+    log_probabilities = [log_prob for _, _, log_prob, _ in combined_results]
 
     if scenario == Scenario.codegeneration or scenario == Scenario.selfrepair:
         metrics = codegen_metrics(

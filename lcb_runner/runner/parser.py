@@ -131,6 +131,22 @@ def get_args():
         default=None,
         help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
     )
+    parser.add_argument(
+        "--generations_path",
+        type=str,
+        help="Path to the generations file to use for evaluation.",
+    )
+    parser.add_argument(
+        "--all_ids_dict",
+        type=str,
+        help="Path to the dictionary containing all IDs to include.",
+    )
+    parser.add_argument(
+        "--split",
+        choices=["train", "test", "val", "all"],
+        type=str,
+        help="Subset of the data to run on (train/val/test/all).",
+    )
 
     args = parser.parse_args()
 

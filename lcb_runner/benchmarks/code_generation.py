@@ -54,6 +54,7 @@ class CodeGenerationProblem:
     metadata: dict
 
     def __post_init__(self):
+        self.question_id = str(self.question_id)
         self.platform = Platform(self.platform)
         self.difficulty = Difficulty(self.difficulty)
         self.contest_date = datetime.fromisoformat(self.contest_date)
@@ -75,8 +76,8 @@ class CodeGenerationProblem:
 
         self.metadata = json.loads(self.metadata)  # type: ignore
 
-    def insert_output(self, output_list: list[str], code_list: list[str]) -> dict:
-        return {
+    def insert_output(self, output_list: list[str], code_list: list[str], log_probabilities: list[float] = None) -> dict:
+        ret = {
             "question_title": self.question_title,
             "question_content": self.question_content,
             "platform": self.platform.value,
@@ -88,15 +89,19 @@ class CodeGenerationProblem:
             "output_list": output_list,
             "code_list": code_list,
         }
+        if log_probabilities is not None:
+            ret["log_probabilities"] = log_probabilities
+        return ret
 
     def insert_output_evaluation(
         self,
         output_list: list[str],
         code_list: list[str],
         graded_list: list[bool],
+        log_probabilities: list[float] = None,
         **kwargs,
     ) -> dict:
-        output = self.insert_output(output_list, code_list)
+        output = self.insert_output(output_list, code_list, log_probabilities)
         output["graded_list"] = graded_list
         output["pass@1"] = graded_list.count(True) / len(graded_list)
         for k, v in kwargs.items():
@@ -115,6 +120,7 @@ class CodeGenerationProblem:
                         t.output
                         for t in self.public_test_cases + self.private_test_cases
                     ],
+                    "question_id": self.question_id,
                     "fn_name": self.metadata.get("func_name", None),
                 }
             ),

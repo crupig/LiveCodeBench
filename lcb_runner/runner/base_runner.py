@@ -8,6 +8,7 @@ from lcb_runner.lm_styles import LanguageModel
 from lcb_runner.utils.path_utils import get_cache_path
 from lcb_runner.utils.multiprocess import run_tasks_in_parallel
 from lcb_runner.runner.scenario_router import Scenario
+from lcb_runner.lm_styles import LMStyle
 
 
 class BaseRunner(ABC):
@@ -110,15 +111,25 @@ class BaseRunner(ABC):
     ) -> list[list[str]]:
         if self.args.use_cache:
             outputs = []
+            log_probabilities = []
             batch_size = self.args.cache_batch_size
             for i in range(0, len(prompts), batch_size):
                 batch = prompts[i : i + batch_size]
-                batch_outputs = self.run_batch(batch)
+                if self.model.model_style in [LMStyle.OpenAIChat, LMStyle.OpenAIReason, LMStyle.OpenAIReasonPreview]:
+                    batch_outputs = self.run_batch(batch)
+                    batch_log_probabilities = [[1.0, 1.0, 1.0] for _ in range(len(batch_outputs))]
+                else:
+                    batch_outputs, batch_log_probabilities = self.run_batch(batch)
                 outputs.extend(batch_outputs)
+                log_probabilities.extend(batch_log_probabilities)
                 self.save_cache()
         else:
-            outputs = self.run_batch(prompts)
-        return outputs
+            if self.model.model_style in [LMStyle.OpenAIChat, LMStyle.OpenAIReason, LMStyle.OpenAIReasonPreview]:
+                outputs = self.run_batch(prompts)
+                log_probabilities = [1.0, 1.0, 1.0]
+            else:
+                outputs, log_probabilities = self.run_batch(prompts)
+        return outputs, log_probabilities
 
     def run_main_repair(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         assert self.args.n == 1
@@ -177,5 +188,5 @@ class BaseRunner(ABC):
         prompts = [
             format_prompt(problem, self.model.model_style) for problem in benchmark
         ]
-        outputs = self.prompts_to_outputs(prompts)
-        return outputs
+        outputs, log_probabilities = self.prompts_to_outputs(prompts)
+        return outputs, log_probabilities

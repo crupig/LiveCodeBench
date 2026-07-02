@@ -3,6 +3,7 @@ import json
 import sys
 import faulthandler
 import platform
+import traceback
 
 # used for debugging to time steps
 from datetime import datetime
@@ -232,6 +233,10 @@ def grade_call_based(
     # call-based clean up logic
     # need to wrap in try-catch logic after to catch the correct errors, but for now this is fine.
     code = import_string + "\n\n" + code
+    
+    if 'os.kill' in code:
+        return
+
     compiled_sol = compile_code(code, timeout)
 
     if compiled_sol is None:
@@ -278,6 +283,10 @@ def grade_call_based(
                     "expected": truncatefn(gt_out),
                     "error_code": -2,
                     "error_message": "Wrong Answer",
+                    "full_code": code,
+                    "all_inputs" : all_inputs[:2],
+                    "all_outputs" : all_outputs[:2],
+                    "type" : "CALL"
                 }
         except Exception as e:
             signal.alarm(0)
@@ -286,26 +295,35 @@ def grade_call_based(
                 return all_results, {
                     "error": repr(e),
                     "error_code": -3,
+                    "traceback": traceback.format_exc(),
                     "error_message": "Time Limit Exceeded",
                     "inputs": truncatefn(gt_inp),
                     "expected": truncatefn(gt_out),
+                    "all_inputs" : all_inputs[:2],
+                    "all_outputs" : all_outputs[:2],
+                    "full_code": code,
+                    "type" : "CALL"
                 }
             else:
                 all_results.append(-4)
                 return all_results, {
                     "error": repr(e),
                     "error_code": -4,
+                    "traceback": traceback.format_exc(),
                     "error_message": "Runtime Error",
                     "inputs": truncatefn(gt_inp),
                     "expected": truncatefn(gt_out),
+                    "all_inputs" : all_inputs[:2],
+                    "all_outputs" : all_outputs[:2],
+                    "full_code": code,
+                    "type" : "CALL"
                 }
 
         finally:
             signal.alarm(0)
             faulthandler.disable()
 
-    return all_results, {"execution time": total_execution}
-
+    return all_results, {"execution time": total_execution, "full_code": code, "type" : "CALL", "all_inputs" : all_inputs[:2], "all_outputs" : all_outputs[:2]}
 
 def grade_stdio(
     code: str,
@@ -315,6 +333,9 @@ def grade_stdio(
 ):
     ## runtime doesn't interact well with __name__ == '__main__'
     code = clean_if_name(code)
+
+    if 'os.kill' in code:
+        return
 
     ## we wrap the given code inside another function
     code = make_function(code)
@@ -349,18 +370,28 @@ def grade_stdio(
                     return all_results, {
                         "error": repr(e),
                         "error_code": -3,
+                        "traceback": traceback.format_exc(),
                         "error_message": "Time Limit Exceeded",
                         "inputs": truncatefn(gt_inp),
                         "expected": truncatefn(gt_out),
+                        "full_code": code,
+                        "type" : "STDIO",
+                        "all_inputs" : all_inputs[:2],
+                        "all_outputs" : all_outputs[:2],
                     }
                 else:
                     all_results.append(-4)
                     return all_results, {
                         "error": repr(e),
                         "error_code": -4,
+                        "traceback": traceback.format_exc(),
                         "error_message": "Runtime Error",
                         "inputs": truncatefn(gt_inp),
                         "expected": truncatefn(gt_out),
+                        "full_code": code,
+                        "type" : "STDIO",
+                        "all_inputs" : all_inputs[:2],
+                        "all_outputs" : all_outputs[:2],
                     }
 
             finally:
@@ -379,6 +410,11 @@ def grade_stdio(
             "inputs": truncatefn(gt_inp),
             "expected": truncatefn(gt_out),
             "error_code": -2,
+            "traceback": "-",
+            "full_code": code,
+            "type" : "STDIO",
+            "all_inputs" : all_inputs[:2],
+            "all_outputs" : all_outputs[:2],
         }
 
         if len(stripped_prediction_lines) != len(stripped_gt_out_lines):
@@ -409,20 +445,32 @@ def grade_stdio(
             )
             if not success:
                 all_results.append(-2)
+                WA_send_args["full_code"] = code
+                WA_send_args["type"] = "STDIO"
+                WA_send_args["all_inputs"] = all_inputs[:2]
+                WA_send_args["all_outputs"] = all_outputs[:2]
                 return all_results, WA_send_args
             success, decimal_gtout_line = convert_line_to_decimals(stripped_gt_out_line)
             if not success:
                 all_results.append(-2)
+                WA_send_args["full_code"] = code
+                WA_send_args["type"] = "STDIO"
+                WA_send_args["all_inputs"] = all_inputs[:2]
+                WA_send_args["all_outputs"] = all_outputs[:2]
                 return all_results, WA_send_args
 
             if decimal_prediction_line == decimal_gtout_line:
                 continue
 
             all_results.append(-2)
+            WA_send_args["full_code"] = code
+            WA_send_args["type"] = "STDIO"
+            WA_send_args["all_inputs"] = all_inputs[:2]
+            WA_send_args["all_outputs"] = all_outputs[:2]
             return all_results, WA_send_args
         all_results.append(True)
 
-    return all_results, {"execution time": total_execution_time}
+    return all_results, {"execution time": total_execution_time, "full_code": code, "type" : "STDIO", "all_inputs" : all_inputs[:2], "all_outputs" : all_outputs[:2]}
 
 
 def run_test(sample, test=None, debug=False, timeout=6):

@@ -265,6 +265,21 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4",
     ),
+    ## OpenAI GPT-4.1 (and 4.1 Mini)
+    LanguageModel(
+        "gpt-4.1",
+        "openai--gpt-4.1",
+        LMStyle.OpenAIChat,
+        datetime(2023, 4, 30),
+        link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
+    ),
+    LanguageModel(
+        "gpt-4.1-mini",
+        "openai--gpt-4.1-mini",
+        LMStyle.OpenAIChat,
+        datetime(2023, 4, 30),
+        link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
+    ),
     ## OpenAI GPT-4O (and Mini)
     LanguageModel(
         "gpt-4o-2024-05-13",
@@ -595,6 +610,35 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 1, 1),
         link="https://huggingface.co/google/gemma-2b",
     ),
+    # Gemma-3 models
+    LanguageModel(
+        "google/gemma-3-1b-it",
+        "google--gemma-3-1b-it",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-3-1b-it",
+    ),
+    LanguageModel(
+        "google/gemma-3-4b-it",
+        "google--gemma-3-4b-it",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-3-4b-it",
+    ),
+    LanguageModel(
+        "google/gemma-3-12b-it",
+        "google--gemma-3-12b-it",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-3-12b-it",
+    ),
+    LanguageModel(
+        "google/gemma-3-27b-it",
+        "google--gemma-3-27b-it",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-3-27b-it",
+    ),
     ## Mistral Web
     LanguageModel(
         "mistral-large-latest",
@@ -671,16 +715,44 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/Qwen/Qwen2.5-72B-Instruct",
     ),
     ## Qwen 2.5-Coder
+     LanguageModel(
+        "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+        "Qwen--Qwen2.5-Coder-0.5B-Instruct",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    ),
+     LanguageModel(
+        "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "Qwen--Qwen2.5-Coder-1.5B-Instruct",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    ),
+    LanguageModel(
+        "Qwen/Qwen2.5-Coder-3B-Instruct",
+        "Qwen--Qwen2.5-Coder-3B-Instruct",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct",
+    ),
     LanguageModel(
         "Qwen/Qwen2.5-Coder-7B-Instruct",
-        "Qwen2.5-Coder-Ins-7B",
+        "Qwen--Qwen2.5-Coder-7B-Instruct",
         LMStyle.CodeQwenInstruct,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
     ),
     LanguageModel(
+        "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "Qwen--Qwen2.5-Coder-14B-Instruct",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/Qwen2.5-Coder-14B-Instruct",
+    ),
+    LanguageModel(
         "Qwen/Qwen2.5-Coder-32B-Instruct",
-        "Qwen2.5-Coder-Ins-32B",
+        "Qwen--Qwen2.5-Coder-32B-Instruct",
         LMStyle.CodeQwenInstruct,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",

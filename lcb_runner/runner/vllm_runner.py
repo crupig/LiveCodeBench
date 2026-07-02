@@ -32,6 +32,7 @@ class VLLMRunner(BaseRunner):
             frequency_penalty=0,
             presence_penalty=0,
             stop=self.args.stop,
+            logprobs=0
         )
 
     def _run_single(self, prompt: str) -> list[str]:
@@ -39,6 +40,7 @@ class VLLMRunner(BaseRunner):
 
     def run_batch(self, prompts: list[str]) -> list[list[str]]:
         outputs = [None for _ in prompts]
+        log_probabilities = [None for _ in prompts]
         remaining_prompts = []
         remaining_indices = []
         for prompt_index, prompt in enumerate(prompts):
@@ -57,7 +59,14 @@ class VLLMRunner(BaseRunner):
                 ):
                     self.cache[remaining_prompt] = [o.text for o in vllm_output.outputs]
                     outputs[index] = [o.text for o in vllm_output.outputs]
+                    log_probabilities[index] = []
+                    for o in vllm_output.outputs:
+                        log_probabilities[index].append([x[list(x.keys())[0]].logprob for x in o.logprobs])
+                    
             else:
                 for index, vllm_output in zip(remaining_indices, vllm_outputs):
                     outputs[index] = [o.text for o in vllm_output.outputs]
-        return outputs
+                    log_probabilities[index] = []
+                    for o in vllm_output.outputs:
+                        log_probabilities[index].append([x[list(x.keys())[0]].logprob for x in o.logprobs])
+        return outputs, log_probabilities
