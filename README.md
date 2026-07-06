@@ -216,7 +216,7 @@ For more details, please refer to our website at [livecodebench.github.io](https
 }
 ```
 
-## PEP notes
+## Notes for replication of "Comparative Study of Selection Strategies"
 This fork was created as a support generation tool for the work "How Should We Rank LLM Code Generations? A Comparative Study of  Selection Strategies". It was modified so that also the log probabilities of the generated tokens are extracted. Also the test scripts were modified accordingly.
 
 **To setup:**
