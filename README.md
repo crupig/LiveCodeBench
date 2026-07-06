@@ -234,7 +234,7 @@ For example:
 
 **Evaluation:**
 
-Example of commands to run the scripts (input file and number of workers):
+Example of command to run the scripts (input file and number of workers):
 
 ```bash run_eval.sh ./path_to_generation_file.json 8```
 
