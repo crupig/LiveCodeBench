@@ -232,5 +232,10 @@ For example:
 
 ```bash run_gen.sh 0 Qwen/Qwen2.5-Coder-3B-Instruct```
 
+**Evaluation:**
+
+Example of commands to run the scripts (input file and number of workers):
+```./run_eval.sh ./path_to_generation_file.json 8```
+
 ### Testcases generation
 In order to generate test cases instead of code solutions use the scripts in `scripts_to_replace_testcases`. The relative path of each script is reported in the first line of the script itself. Also the evaluation framework changes a bit.
