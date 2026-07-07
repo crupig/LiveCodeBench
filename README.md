@@ -239,4 +239,12 @@ Example of command to run the scripts (input file and number of workers):
 ```bash run_eval.sh ./path_to_generation_file.json 8```
 
 ### Testcases generation
-In order to generate test cases instead of code solutions use the scripts in `scripts_to_replace_testcases`. The relative path of each script is reported in the first line of the script itself. Also the evaluation framework changes a bit.
+In order to generate test cases instead of code solutions use the scripts in `scripts_to_replace_testcases`. The relative path of each script is reported in the first line of the script itself. 
+
+```bash run_gen_tests.sh 0 Qwen/Qwen2.5-Coder-3B-Instruct```
+
+**Evaluation:**
+
+Example of command to run the scripts (input file and number of workers):
+
+```bash run_eval_tests.sh ./path_to_generation_file.json 8```
