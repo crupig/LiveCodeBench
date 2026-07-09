@@ -217,9 +217,15 @@ For more details, please refer to our website at [livecodebench.github.io](https
 ```
 
 ## Notes for replication of "Comparative Study of Selection Strategies"
-This fork was created as a support generation tool for the work **"How Should We Rank LLM Code Generations? A Comparative Study of  Selection Strategies"**. It was modified so that also the log probabilities of the generated tokens are extracted. Also the test scripts were modified accordingly.
+This repo was created as a support generation tool for the work **"How Should We Rank LLM Code Generations? A Comparative Study of  Selection Strategies"**. 
 
-**To setup:**
+The original code generation framework has been modified in order to:
+* extract the log-probabilities when generating code solutions;
+* extracting test execution feedbacks when evaluting the generated solutions;
+* generate test cases instead of code solutions (for the CodeT approach);
+* run the generated test cases against the previously generated code solutions.
+
+### To setup:
 * clone the repo;
 * create virtual environment;
 * install `requirements.txt` (designed to work on Python `3.12`)
@@ -238,13 +244,19 @@ Example of command to run the scripts (input file and number of workers):
 
 ```bash run_eval.sh ./path_to_generation_file.json 8```
 
-### Testcases generation
+### Test cases generation (CodeT approach):
 In order to generate test cases instead of code solutions use the scripts in `scripts_to_replace_testcases`. The relative path of each script is reported in the first line of the script itself. 
 
 ```bash run_gen_tests.sh 0 Qwen/Qwen2.5-Coder-3B-Instruct```
 
-**Evaluation:**
+**To execute tests:**
 
-Example of command to run the scripts (input file and number of workers):
+To exploit the evaluation framework of LiveCodeBench, we have to post process the generated test cases in order to extract `<input, expected_output>` pairs. This is done in `knowlbase_tests.py`.
+
+Afterwards, within each model (generator) and each coding problem (task id), we have to run each generated code solution against each generated test case.
+
+`merge_generations_and_tests_b4_test_exec.py` creates and saves all the `<code_solution, test_statement>` pairs.
+
+After generating all the pairs, the tests can be run as (input file and number of workers):
 
 ```bash run_eval_tests.sh ./path_to_generation_file.json 8```
