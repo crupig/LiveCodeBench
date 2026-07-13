@@ -7,7 +7,7 @@ import gzip
 if __name__ == "__main__":
     
     # IMPORT CODE KNOWLEDGE BASE
-    kb_dir = "./LiveCodeBench/knowlbase"
+    kb_dir = "../data/knowlbase/LiveCodeBench"
     kb = pd.DataFrame()
     for file in os.listdir(kb_dir):
         if re.search(r'knowlbase_livecodebench_part\d+\.json', file):
@@ -22,12 +22,12 @@ if __name__ == "__main__":
     kb['onwhichtomerge'] = kb['solution_idx'].apply(lambda x: x.split("--SampleID")[0])
     
     # FILTER KNOWLEDGE BASE TO TEST SET SOLUTIONS
-    with open("../data/finetuning/test_upto20_real.jsonl", "r") as f:
-        test_set_uptp20 = [json.loads(line) for line in f]
-    test_set_uptp20 = pd.DataFrame(test_set_uptp20)
-    solution_ids_to_keep = test_set_uptp20.solution_idx.unique().tolist()
+    with open("../data/testset/test.jsonl", "r") as f:
+        test_set = [json.loads(line) for line in f]
+    test_set = pd.DataFrame(test_set)
+    solution_ids_to_keep = test_set.solution_idx.unique().tolist()
     kb = kb[kb.solution_idx.isin(solution_ids_to_keep)]
-    del test_set_uptp20
+    del test_set
     del solution_ids_to_keep
 
     
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         kb_genby = kb[kb['generated_by'] == generated_by]
 
         # IMPORT TESTS KNOWLEDGE BASE
-        test_path = f"../knowlbase-tests/{generated_by}_knowlbase_tests_livecodebench.jsonl"
+        test_path = f"../data/knowlbase-tests/{generated_by}_knowlbase_tests_livecodebench.jsonl"
         
         if not os.path.exists(test_path):
             print(f"Test knowledge base file not found for {generated_by} at path: {test_path}. Skipping.")
